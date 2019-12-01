@@ -1,8 +1,8 @@
-package com.titus.faketwitter;
+package com.titus.faketwitter.users;
 
 import java.util.Objects;
 
-public class LoginRequest {
+public class UserLoginRequest {
 
   private String userName;
   private String password;
@@ -33,10 +33,10 @@ public class LoginRequest {
     if (this == obj) {
       return true;
     }
-    if (!(obj instanceof LoginRequest)) {
+    if (!(obj instanceof UserLoginRequest)) {
       return false;
     }
-    LoginRequest other = (LoginRequest)obj;
+    UserLoginRequest other = (UserLoginRequest)obj;
     return Objects.equals(password, other.password) && Objects.equals(userName, other.userName);
   }
 

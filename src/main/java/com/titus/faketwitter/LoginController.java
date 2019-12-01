@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.titus.faketwitter.users.UserLoginRequest;
+
 @Controller
 public class LoginController {
 
@@ -17,7 +19,7 @@ public class LoginController {
   }
   
   @PostMapping(value = "/login", consumes= {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
-  public ModelAndView postLogin(LoginRequest loginRequest, HttpSession session) {
+  public ModelAndView postLogin(UserLoginRequest loginRequest, HttpSession session) {
     session.setAttribute("userName", loginRequest.getUserName());
     
     return new ModelAndView("redirect:/main");
