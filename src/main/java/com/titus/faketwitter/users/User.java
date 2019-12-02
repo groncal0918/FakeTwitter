@@ -108,7 +108,6 @@ public class User {
     return roles;
   }
 
-
   public void setRoles(HashSet<Role> roles) {
     this.roles.clear();
     this.roles.addAll(roles);
