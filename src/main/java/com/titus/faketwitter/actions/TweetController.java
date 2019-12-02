@@ -1,5 +1,7 @@
-package com.titus.faketwitter.tweets;
+package com.titus.faketwitter.actions;
 
+import com.titus.faketwitter.tweets.Tweet;
+import com.titus.faketwitter.tweets.TweetService;
 import com.titus.faketwitter.users.User;
 import com.titus.faketwitter.users.UserService;
 
