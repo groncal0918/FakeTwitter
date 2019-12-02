@@ -19,7 +19,7 @@ import javax.persistence.MappedSuperclass;
 import org.hibernate.annotations.CreationTimestamp;
 
 @MappedSuperclass
-public class AbstractUser {
+public abstract class AbstractUser {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
