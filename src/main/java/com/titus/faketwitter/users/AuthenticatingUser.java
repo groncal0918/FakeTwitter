@@ -7,7 +7,17 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "user")
-public class User extends AbstractUser {
+public class AuthenticatingUser extends AbstractUser {
+
+  private String password;
+  
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
+  }
 
   @Override
   public int hashCode() {
@@ -25,18 +35,19 @@ public class User extends AbstractUser {
     if (!super.equals(obj)) {
       return false;
     }
-    if (!(obj instanceof User)) {
+    if (!(obj instanceof AuthenticatingUser)) {
       return false;
     }
-    User other = (User)obj;
+    AuthenticatingUser other = (AuthenticatingUser)obj;
     return Objects.equals(this.getId(), other.getId());
   }
 
   @Override
   public String toString() {
-    return "User [getId()=" + getId() + ", getEmail()=" + getEmail()
+    return "AuthenticatingUser [getId()=" + getId() + ", getEmail()=" + getEmail()
       + ", getUsername()=" + getUsername() + ", getFirstName()=" + getFirstName()
       + ", getLastName()=" + getLastName() + ", getActive()=" + getActive() + ", getCreatedAt()="
       + getCreatedAt() + ", getRoles()=" + getRoles() + "]";
   }
+  
 }

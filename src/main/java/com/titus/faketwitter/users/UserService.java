@@ -17,14 +17,18 @@ public class UserService {
 
   private final UserRepository userRepository;
 
+  private final AuthenticatingUserRepository authenticatingRepository;
+  
   private final RoleRepository roleRepository;
 
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+
   @Autowired
-  public UserService(UserRepository userRepository, RoleRepository roleRepository,
+  public UserService(UserRepository userRepository, AuthenticatingUserRepository authenticatingRepository, RoleRepository roleRepository,
                      BCryptPasswordEncoder bCryptPasswordEncoder) {
     this.userRepository = userRepository;
+    this.authenticatingRepository = authenticatingRepository;
     this.roleRepository = roleRepository;
     this.bCryptPasswordEncoder = bCryptPasswordEncoder;
   }
@@ -41,16 +45,8 @@ public class UserService {
     userRepository.save(user);
   }
 
-  public User saveNewUser(User user) {
-    user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-    user.setActive(1);
-    Role userRole = roleRepository.findByRole("USER");
-    user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
-    return userRepository.save(user);
-  }
-  
-  public User saveNewUser(UserCreationRequest request) {
-    User user = new User();
+  public void saveNewUser(UserCreationRequest request) {
+    AuthenticatingUser user = new AuthenticatingUser();
     user.setEmail(request.getEmail());
     user.setFirstName(request.getFirstName());
     user.setLastName(request.getLastName());
@@ -61,7 +57,7 @@ public class UserService {
     Role userRole = roleRepository.findByRole("USER");
     user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
     
-    return userRepository.save(user);
+    authenticatingRepository.save(user);
   }
 
   public User getLoggedInUser() {
