@@ -47,10 +47,25 @@ public class UserService {
     Role userRole = roleRepository.findByRole("USER");
     user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
     return userRepository.save(user);
-}
+  }
   
+  public User saveNewUser(UserCreationRequest request) {
+    User user = new User();
+    user.setEmail(request.getEmail());
+    user.setFirstName(request.getFirstName());
+    user.setLastName(request.getLastName());
+    user.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
+    user.setUsername(request.getUsername());
+
+    user.setActive(1);
+    Role userRole = roleRepository.findByRole("USER");
+    user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
+    
+    return userRepository.save(user);
+  }
+
   public User getLoggedInUser() {
     String loggedInUsername = SecurityContextHolder.getContext().getAuthentication().getName();
     return findByUsername(loggedInUsername);
-}
+  }
 }

@@ -1,6 +1,7 @@
 package com.titus.faketwitter.actions;
 
 import com.titus.faketwitter.users.User;
+import com.titus.faketwitter.users.UserCreationRequest;
 import com.titus.faketwitter.users.UserService;
 
 import javax.validation.Valid;
@@ -24,13 +25,13 @@ public class RegistrationController {
   
   @GetMapping(value="/signup")
   public String registration(Model model){
-      User user = new User();
+    UserCreationRequest user = new UserCreationRequest();
       model.addAttribute("user", user);
       return "registration";
   }
 
   @PostMapping(value = "/signup")
-  public String createNewUser(@Valid User user, BindingResult bindingResult, Model model) {
+  public String createNewUser(@Valid UserCreationRequest user, BindingResult bindingResult, Model model) {
       User userExists = userService.findByUsername(user.getUsername());
       if (userExists != null) {
           bindingResult.rejectValue("username", "error.user", "Username is already taken");
@@ -38,7 +39,7 @@ public class RegistrationController {
       if (!bindingResult.hasErrors()) {
           userService.saveNewUser(user);
           model.addAttribute("success", "Sign up successful!");
-          model.addAttribute("user", new User());
+          model.addAttribute("user", new UserCreationRequest());
       }
       return "registration";
   }
