@@ -1,0 +1,1 @@
+MERGE INTO role(id, role) VALUES (1,'USER');
