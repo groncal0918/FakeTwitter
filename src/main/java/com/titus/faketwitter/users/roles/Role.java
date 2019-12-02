@@ -1,4 +1,4 @@
-package com.titus.faketwitter.users;
+package com.titus.faketwitter.users.roles;
 
 import java.util.Objects;
 

@@ -1,5 +1,7 @@
 package com.titus.faketwitter.users;
 
+import com.titus.faketwitter.users.roles.Role;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
