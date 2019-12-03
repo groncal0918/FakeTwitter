@@ -5,6 +5,7 @@
 
 <body>
     <div class="container">
+        <nav th:replace="fragments/navbar"></nav>
         <h2>Welcome!</h2> 
         <form th:action="@{/login}" method="post"><br/>
             <input type="text" id="username" name="username" th:placeholder="Username" class="form-control"/> <br/>

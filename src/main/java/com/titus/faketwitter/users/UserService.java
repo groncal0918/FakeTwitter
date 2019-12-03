@@ -7,6 +7,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,16 +21,15 @@ public class UserService {
   private final UserRepository userRepository;
 
   private final AuthenticatingUserRepository authenticatingRepository;
-  
+
   private final RoleRepository roleRepository;
 
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-
   @Autowired
-  public UserService(UserRepository userRepository, AuthenticatingUserRepository authenticatingRepository, 
-                     RoleRepository roleRepository,
-                     BCryptPasswordEncoder bCryptPasswordEncoder) {
+  public UserService(UserRepository userRepository,
+                     AuthenticatingUserRepository authenticatingRepository,
+                     RoleRepository roleRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
     this.userRepository = userRepository;
     this.authenticatingRepository = authenticatingRepository;
     this.roleRepository = roleRepository;
@@ -57,8 +59,17 @@ public class UserService {
     user.setActive(1);
     Role userRole = roleRepository.findByRole("USER");
     user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
-    
+
     authenticatingRepository.save(user);
+  }
+
+  public void logInUser(HttpServletRequest request, String username, String password) {
+    try {
+      request.login(username, password);
+    } catch (ServletException e) {
+      System.err.println("Error while login " + e);
+      e.printStackTrace(System.err);
+    }
   }
 
   public User getLoggedInUser() {

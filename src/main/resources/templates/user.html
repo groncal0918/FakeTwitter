@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<head th:replace="fragments/head :: title(${user.username} + ' profile')"></head>
+
+<body>
+	<div class="container">
+		<nav th:replace="fragments/navbar"></nav>
+		<h2>Profile for <span th:text="${user.firstName}"></span> <span th:text="${user.lastName}"></span> - <span style="color: #00aced">@<span th:text="${user.username}"></span></span></h2>
+		<h5>Joined <span th:text="${#dates.format(user.createdAt, 'MMMM dd, yyyy')}"></span></h5>
+		<h3>Tweets</h3> 
+    
+    <div th:replace="fragments/tweets :: tweetList"></div>
+    
+	</div>
+</body>
+
+</html>

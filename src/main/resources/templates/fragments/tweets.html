@@ -1,0 +1,8 @@
+<div th:fragment="tweetList">
+	<div th:if="${not #lists.isEmpty(tweetList)}" class="list-group" th:each="tweet:${tweetList}">
+		<div th:replace="fragments/tweet :: tweet"></div>
+	</div>
+	<div th:if="${#lists.isEmpty(tweetList)}">
+    <h3>No Recent Tweets</h3>
+  </div>
+</div>

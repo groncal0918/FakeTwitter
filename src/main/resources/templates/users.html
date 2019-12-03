@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<head th:replace="fragments/head :: title('Users')"></head>
+
+<body>
+  <div class="container">
+    <nav th:replace="fragments/navbar"></nav>
+    <h2>Users</h2>
+    <div class="list-group" th:each="user:${users}">
+            <a th:href="@{/users/} + ${user.username}" class="list-group-item list-group-item-action">
+            <div class="row">
+                <div class="col col-sm-6">
+                    <h5 class="mb-1" style="color: #00aced"> @<span th:text="${user.username}"></span></h5> 
+                    <h5 class="mb-1"><span th:text="${user.firstName}"></span> <span th:text="${user.lastName}"></span> </h5>
+                </div>
+                <div class="col col-sm-2 col-sm-offset-4 text-right">
+                    <h5 class="mb-1"><span th:text="${tweetCounts.get(user)}"></span> tweets</h5>
+                </div>
+                <div class="col col-sm-2 col-sm-offset-2 text-right">
+                  <form th:if="${!currentUser.equals(user) && !currentUser.follows.contains(user)}" th:action="'/users/' + ${currentUser.username} + '/follows/' + ${user.username}" method="POST">
+                    <button style="float:right" type="submit" class="btn btn-md btn-success">Follow</button>
+                  </form>
+                  <form th:if="${!currentUser.equals(user) && currentUser.follows.contains(user)}" th:action="'/users/' + ${currentUser.username} + '/unfollow/' + ${user.username}" method="POST">
+                    <button style="float:right" type="submit" class="btn btn-md btn-danger">Unfollow</button>
+                  </form>
+                </div>
+            </div>
+        </a>
+    </div>
+  </div>
+
+</body>
+
+</html>

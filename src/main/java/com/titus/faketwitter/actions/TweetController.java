@@ -5,6 +5,7 @@ import com.titus.faketwitter.tweets.TweetService;
 import com.titus.faketwitter.users.User;
 import com.titus.faketwitter.users.UserService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -15,6 +16,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class TweetController {
@@ -29,8 +32,14 @@ public class TweetController {
   }
   
   @GetMapping(value= {"/tweets", "/"})
-  public String getFeed(Model model){
-      List<Tweet> tweets = tweetService.findAll();
+  public String getFeed(Model model, @RequestParam(name = "tag", required = false) String tag) {
+      List<Tweet> tweets = new ArrayList<>();
+      if(tag == null) {
+        tweets.addAll(tweetService.findAll());
+      } else {
+        tweets.addAll(tweetService.findAllWithTag(tag));
+      }
+      
       model.addAttribute("tweetList", tweets);
       return "feed";
   }
@@ -42,14 +51,15 @@ public class TweetController {
   }
   
   @PostMapping(value = "/tweets")
-  public String submitTweetForm(@Valid Tweet tweet, BindingResult bindingResult, Model model) {
-      User user = userService.getLoggedInUser();
+  public String submitTweetForm(@Valid Tweet tweet, BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
       if (!bindingResult.hasErrors()) {
+          User user = userService.getLoggedInUser();
           tweet.setUser(user);
           tweetService.save(tweet);
-          model.addAttribute("successMessage", "Tweet successfully created!");
-          model.addAttribute("tweet", new Tweet());
+          redirectAttributes.addFlashAttribute("successMessage", "Tweet successfully created!");
+          return "redirect:/tweets";
       }
+      model.addAttribute("tweet", new Tweet());
       return "newTweet";
   }
 }

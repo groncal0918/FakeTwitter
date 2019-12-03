@@ -5,11 +5,9 @@
 
 <body>
     <div class="container">
+        <nav th:replace="fragments/navbar"></nav>
         <h2>Tweets</h2>
-        <div th:each="tweet:${tweetList}">
-            <h5>@<span th:text="${tweet.user.username}"></span><small><span th:text="${#dates.format(tweet.createdAt, 'M/d/yy')}"></span></small></h5>
-            <p th:utext="${tweet.message}"></p>
-      </div>
+        <div th:replace="fragments/tweets :: tweetList"></div>
     </div>
 </body>
 
