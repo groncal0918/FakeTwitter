@@ -3,9 +3,7 @@ package com.titus.faketwitter.actions;
 import com.titus.faketwitter.users.User;
 import com.titus.faketwitter.users.UserCreationRequest;
 import com.titus.faketwitter.users.UserService;
-
 import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,26 +20,27 @@ public class RegistrationController {
   public RegistrationController(UserService userService) {
     this.userService = userService;
   }
-  
-  @GetMapping(value="/signup")
-  public String registration(Model model){
+
+  @GetMapping(value = "/signup")
+  public String registration(Model model) {
     UserCreationRequest user = new UserCreationRequest();
-      model.addAttribute("user", user);
-      return "registration";
+    model.addAttribute("user", user);
+    return "registration";
   }
 
   @PostMapping(value = "/signup")
-  public String createNewUser(@Valid UserCreationRequest user, BindingResult bindingResult, Model model) {
-      User userExists = userService.findByUsername(user.getUsername());
-      if (userExists != null) {
-          bindingResult.rejectValue("username", "error.user", "Username is already taken");
-      }
-      if (!bindingResult.hasErrors()) {
-          userService.saveNewUser(user);
-          model.addAttribute("success", "Sign up successful!");
-          model.addAttribute("user", new UserCreationRequest());
-      }
-      return "registration";
+  public String createNewUser(@Valid UserCreationRequest user, BindingResult bindingResult,
+      Model model) {
+    User userExists = userService.findByUsername(user.getUsername());
+    if (userExists != null) {
+      bindingResult.rejectValue("username", "error.user", "Username is already taken");
+    }
+    if (!bindingResult.hasErrors()) {
+      userService.saveNewUser(user);
+      model.addAttribute("success", "Sign up successful!");
+      model.addAttribute("user", new UserCreationRequest());
+    }
+    return "registration";
   }
-  
+
 }
