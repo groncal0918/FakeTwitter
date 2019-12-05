@@ -103,10 +103,9 @@ public class Tweet {
     for(int i=1;i<messageSplitByHash.length;i++) {
       String tag = "#" + messageSplitByHash[i].trim();
       if(tag.contains(" ")) {
-        tags.add(tag.substring(0, tag.indexOf(" ")));
-      } else {
-        tags.add(tag);
+        tag = tag.substring(0, tag.indexOf(" "));
       }
+      tags.add(tag);
     }
     return tags;
   }
