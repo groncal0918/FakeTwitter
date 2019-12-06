@@ -15,6 +15,8 @@ import org.ocpsoft.prettytime.PrettyTime;
 
 public class DisplayableTweet {
 
+  private static final int MAX_DISPLAY_URL_LENGTH = 23;
+
   private static final SimpleDateFormat dateFormat = new SimpleDateFormat("M/d/yy");
   
   private final Tweet tweet;
@@ -36,21 +38,25 @@ public class DisplayableTweet {
   }
   
   public String getMessage() {
-    String message = tweet.getMessage();
-    Set<Hashtag> hashtags = tweet.getHashtags();
-    
-    if(message == null) {
+    String decoratedMessage = tweet.getMessage();
+    if(decoratedMessage == null) {
       return "";
     }
-    if(hashtags.isEmpty()) {
-      return message;
-    }
+    decoratedMessage = decorateHashtags(decoratedMessage);
+    decoratedMessage = decorateUrls(decoratedMessage);
+    
+    
+    return decoratedMessage;
+  }
+
+  private String decorateHashtags(String message) {
+    Set<Hashtag> hashtags = tweet.getHashtags();
+    
     String decoratedMessage = message;
     for (Hashtag hashtag : hashtags) {
       String anchor = "<a href=\"/tweets?tag=" + encodedHashtag(hashtag) + "\">" + hashtag.getTag() + "</a>";
       decoratedMessage = decoratedMessage.replace(hashtag.getTag(), anchor);
     }
-    
     return decoratedMessage;
   }
   
@@ -60,6 +66,34 @@ public class DisplayableTweet {
     } catch (UnsupportedEncodingException ex) {
       throw new IllegalStateException("Could not url encode " + hashtag + " using " + StandardCharsets.UTF_8, ex);
     }
+  }
+
+  private String decorateUrls(String message) {
+    String[] split = message.split(" ");
+    
+    for(int i=0;i<split.length;i++) {
+      if(split[i].startsWith("http")) {
+        split[i] = encodeUrl(split[i]);
+      }
+    }
+    
+    return join(split);
+  }
+  
+  private String encodeUrl(String url) {
+    String anchor = "<a href=\"" + url + "\">";
+    if(url.length() > MAX_DISPLAY_URL_LENGTH) {
+      return anchor + url.substring(0, MAX_DISPLAY_URL_LENGTH) + "...</a>";  
+    }
+    return anchor + url + "</a>";
+  }
+
+  private String join(String[] split) {
+    String toReturn = "";
+    for (int i=0;i<split.length;i++) {
+      toReturn += split[i] + " ";
+    }
+    return toReturn.substring(0, toReturn.length()-1);
   }
 
   public String getCreatedAt() {

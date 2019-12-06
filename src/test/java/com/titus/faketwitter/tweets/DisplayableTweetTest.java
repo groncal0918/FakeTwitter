@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 public class DisplayableTweetTest {
 
   @Test
-  public void testMessage() {
+  public void testHashtagEncoding() {
     assertEquals("", tweet(null).getMessage());
     
     assertEquals("A tweet with no hashtags", tweet("A tweet with no hashtags").getMessage());
