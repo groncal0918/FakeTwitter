@@ -6,6 +6,7 @@ import com.titus.faketwitter.users.User;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,7 +38,7 @@ public class TweetService {
     return display(tweets);
   }
 
-  public List<DisplayableTweet> findAllByUsers(List<User> users) {
+  public List<DisplayableTweet> findAllByUsers(Collection<User> users) {
     return display(tweetRepository.findAllByUserInOrderByCreatedAtDesc(users));
   }
 
@@ -48,7 +49,7 @@ public class TweetService {
     }
     return display(tweetRepository.findAllByHashtagsContainsOrderByCreatedAtDesc(hashtag));
   }
-  
+
   private List<DisplayableTweet> display(List<Tweet> tweets) {
     PrettyTime prettyTime = new PrettyTime();
     Date now = new Date();
@@ -69,5 +70,5 @@ public class TweetService {
     }
     tweet.setHashtags(hashtags);
     tweetRepository.save(tweet);
-  }  
+  }
 }

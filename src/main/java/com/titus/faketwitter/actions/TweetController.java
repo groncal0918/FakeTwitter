@@ -7,7 +7,9 @@ import com.titus.faketwitter.users.User;
 import com.titus.faketwitter.users.UserService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -33,12 +35,21 @@ public class TweetController {
   }
   
   @GetMapping(value= {"/tweets", "/"})
-  public String getFeed(Model model, @RequestParam(name = "tag", required = false) String tag) {
+  public String getFeed(@RequestParam(name = "tag", required = false) String tag,
+                        @RequestParam(name = "users", required = false) String usernames,
+                        @RequestParam(name = "followers", required = false) Boolean followers,
+                        Model model) {
       List<DisplayableTweet> tweets = new ArrayList<>();
-      if(tag == null) {
-        tweets.addAll(tweetService.findAll());
-      } else {
+      if(tag != null) {
         tweets.addAll(tweetService.findAllWithTag(tag));
+      } else if(usernames != null) {
+        List<User> users = Arrays.asList(usernames.split(",")).stream().map(s -> userService.findByUsername(s)).collect(Collectors.toList());
+        tweets.addAll(tweetService.findAllByUsers(users));
+      } else if(followers != null && Boolean.TRUE.equals(followers)) {
+        User user = userService.getLoggedInUser();
+        tweets.addAll(tweetService.findAllByUsers(user.getFollows()));
+      } else {
+        tweets.addAll(tweetService.findAll());
       }
       
       model.addAttribute("tweetList", tweets);
