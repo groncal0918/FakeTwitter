@@ -3,9 +3,6 @@ package com.titus.faketwitter.tweets;
 import com.titus.faketwitter.tweets.hashtags.Hashtag;
 import com.titus.faketwitter.users.User;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -108,30 +105,6 @@ public class Tweet {
       tags.add(tag);
     }
     return tags;
-  }
-  
-  public String getDisplayMessage() {
-    if(message == null) {
-      return "";
-    }
-    if(hashtags.isEmpty()) {
-      return message;
-    }
-    String decoratedMessage = this.message;
-    for (Hashtag hashtag : hashtags) {
-      String anchor = "<a href=\"/tweets?tag=" + encodedHashtag(hashtag) + "\">" + hashtag.getTag() + "</a>";
-      decoratedMessage = decoratedMessage.replace(hashtag.getTag(), anchor);
-    }
-    
-    return decoratedMessage;
-  }
-
-  private String encodedHashtag(Hashtag hashtag) {
-    try {
-      return URLEncoder.encode(hashtag.getTag(), StandardCharsets.UTF_8.toString());
-    } catch (UnsupportedEncodingException ex) {
-      throw new IllegalStateException("Could not url encode " + hashtag + " using " + StandardCharsets.UTF_8, ex);
-    }
   }
   
   @Override

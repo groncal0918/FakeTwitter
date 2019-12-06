@@ -1,5 +1,6 @@
 package com.titus.faketwitter.actions;
 
+import com.titus.faketwitter.tweets.DisplayableTweet;
 import com.titus.faketwitter.tweets.Tweet;
 import com.titus.faketwitter.tweets.TweetService;
 import com.titus.faketwitter.users.User;
@@ -33,7 +34,7 @@ public class TweetController {
   
   @GetMapping(value= {"/tweets", "/"})
   public String getFeed(Model model, @RequestParam(name = "tag", required = false) String tag) {
-      List<Tweet> tweets = new ArrayList<>();
+      List<DisplayableTweet> tweets = new ArrayList<>();
       if(tag == null) {
         tweets.addAll(tweetService.findAll());
       } else {
