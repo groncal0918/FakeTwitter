@@ -1,6 +1,6 @@
 package com.titus.faketwitter.actions;
 
-import com.titus.faketwitter.tweets.Tweet;
+import com.titus.faketwitter.tweets.DisplayableTweet;
 import com.titus.faketwitter.tweets.TweetService;
 import com.titus.faketwitter.users.User;
 import com.titus.faketwitter.users.UserService;
@@ -36,7 +36,7 @@ public class UserController {
     List<User> users = userService.findAll();
     
     for (User user : users) {
-      List<Tweet> tweets = tweetService.findAllByUser(user);
+      List<DisplayableTweet> tweets = tweetService.findAllByUser(user);
       userTweets.put(user, new Integer(tweets.size()));
     }
     
@@ -49,7 +49,7 @@ public class UserController {
   @GetMapping(value = "/users/{username}")
   public String getUser(@PathVariable(value = "username") String username, Model model) {
     User user = userService.findByUsername(username);
-    List<Tweet> tweets = tweetService.findAllByUser(user);
+    List<DisplayableTweet> tweets = tweetService.findAllByUser(user);
     model.addAttribute("user", user);
     model.addAttribute("tweetList", tweets);
     return "user";

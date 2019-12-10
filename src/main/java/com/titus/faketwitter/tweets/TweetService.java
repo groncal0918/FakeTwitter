@@ -6,8 +6,12 @@ import com.titus.faketwitter.users.User;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.ocpsoft.prettytime.PrettyTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,27 +28,32 @@ public class TweetService {
     this.hashtagRepository = hashtagRepository;
   }
 
-  public List<Tweet> findAll() {
+  public List<DisplayableTweet> findAll() {
     List<Tweet> tweets = tweetRepository.findAllByOrderByCreatedAtDesc();
-    return tweets;
+    return display(tweets);
   }
 
-  public List<Tweet> findAllByUser(User user) {
+  public List<DisplayableTweet> findAllByUser(User user) {
     List<Tweet> tweets = tweetRepository.findAllByUserOrderByCreatedAtDesc(user);
-    return tweets;
+    return display(tweets);
   }
 
-  public List<Tweet> findAllByUsers(List<User> users) {
-    List<Tweet> tweets = tweetRepository.findAllByUserInOrderByCreatedAtDesc(users);
-    return tweets;
+  public List<DisplayableTweet> findAllByUsers(Collection<User> users) {
+    return display(tweetRepository.findAllByUserInOrderByCreatedAtDesc(users));
   }
 
-  public List<Tweet> findAllWithTag(String tag) {
+  public List<DisplayableTweet> findAllWithTag(String tag) {
     Hashtag hashtag = hashtagRepository.findByTag(tag);
     if(hashtag == null) {
       return Arrays.asList();
     }
-    return tweetRepository.findAllByHashtagsContainsOrderByCreatedAtDesc(hashtag);
+    return display(tweetRepository.findAllByHashtagsContainsOrderByCreatedAtDesc(hashtag));
+  }
+
+  private List<DisplayableTweet> display(List<Tweet> tweets) {
+    PrettyTime prettyTime = new PrettyTime();
+    Date now = new Date();
+    return tweets.stream().map(tweet -> new DisplayableTweet(tweet, prettyTime, now)).collect(Collectors.toList());
   }
   
   public void save(Tweet tweet) {
@@ -61,5 +70,5 @@ public class TweetService {
     }
     tweet.setHashtags(hashtags);
     tweetRepository.save(tweet);
-  }  
+  }
 }
